@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 
 namespace CSharpLibrary;
 
@@ -17,7 +18,16 @@ public class BookSearcher
         if (response.IsSuccessStatusCode)
         {
             string responseBody = await response.Content.ReadAsStringAsync();
-            Console.WriteLine(responseBody);
+            //Console.WriteLine(responseBody);
+            string json = await response.Content.ReadAsStringAsync();
+            BookApiSearchResults? result = JsonSerializer.Deserialize<BookApiSearchResults>(json);
+            if (result?.docs is { Count: > 0 } docs)
+            {
+                Console.WriteLine(result.docs[0].title);
+                Console.WriteLine(result.docs[1].title);
+                Console.WriteLine(result.docs[2].title);
+            }
+
         }
         else
         {
