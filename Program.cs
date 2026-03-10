@@ -93,6 +93,10 @@ class Program
 
 
         BookSearcher BS = new BookSearcher();
-        await BS.SearchBook();
+        BS.ShowResults();
+
+        await BS.SearchBook("Tolkien");
+
+        BS.ShowResults();
     }
 }

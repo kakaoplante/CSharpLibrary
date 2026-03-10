@@ -6,12 +6,14 @@ namespace CSharpLibrary;
 public class BookSearcher
 {
 
+    public List<BookApiBookInstance>? ListOfResults;
+
     //Call API
-    public async Task SearchBook()
+    public async Task SearchBook(string query)
     {
         using HttpClient client = new HttpClient();
 
-        string url = "https://openlibrary.org/search.json?q=harry+potter";
+        string url = $"https://openlibrary.org/search.json?q={query}";
 
         HttpResponseMessage response = await client.GetAsync(url);
 
@@ -23,9 +25,7 @@ public class BookSearcher
             BookApiSearchResults? result = JsonSerializer.Deserialize<BookApiSearchResults>(json);
             if (result?.docs is { Count: > 0 } docs)
             {
-                Console.WriteLine(result.docs[0].title);
-                Console.WriteLine(result.docs[1].title);
-                Console.WriteLine(result.docs[2].title);
+                ListOfResults = result.docs;
             }
 
         }
@@ -38,4 +38,18 @@ public class BookSearcher
     //Return list
 
     //Choose from list
+    public void ShowResults()
+    {
+        if (ListOfResults?.Count > 0)
+        {
+            foreach (var book in ListOfResults)
+            {
+                System.Console.WriteLine(book.title + " " + book.author_name?[0]);
+            }
+        }
+        else
+        {
+            System.Console.WriteLine("no results to show");
+        }
+    }
 }
